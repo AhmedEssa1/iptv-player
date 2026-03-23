@@ -2,6 +2,10 @@
 
 A modern IPTV player built with Next.js 15, Supports M3U/M3U8 playlists, HLS streaming, Favorites. Custom sources. And authentication.
 
+## 📖 Documentation
+
+**[User Manual (Arabic)](./manual/user-guide.html)** - Complete guide in Arabic
+
 ## Features
 
 - 📺 HLS/M3U8 streaming support
