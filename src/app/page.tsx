@@ -37,12 +37,12 @@ export default function Home() {
   const openAddModal  = useCallback(() => setModal('add'), []);
   const closeModal    = useCallback(() => setModal(null), []);
 
-  const handleSave = useCallback((name: string, url: string, username: string, password: string) => {
+  const handleSave = useCallback((name: string, url: string, username: string, password: string, icon: string) => {
     if (modal === 'add') {
-      const id = store.addSource(name, url, username, password);
+      const id = store.addSource(name, url, username, password, icon);
       channels.setSrcId(id);
     } else if (modal) {
-      store.saveSourceEdit(modal, name, url, username, password);
+      store.saveSourceEdit(modal, name, url, username, password, icon);
     }
     closeModal();
   }, [modal, store, channels, closeModal]);
@@ -96,6 +96,13 @@ export default function Home() {
           cats={channels.cats}
           onlyFavs={channels.onlyFavs}   onToggleFavs={() => { channels.setOnlyFavs(v => !v); channels.setPage(1); }}
           checkingAll={checker.checkingAll} onCheckAll={checker.checkAll}
+          xtreamCats={channels.xtreamCats}
+          xtreamCatId={channels.xtreamCatId}
+          onSelectXtreamCat={catId => {
+            if (!catId) { channels.backToXtreamCats(); return; }
+            const src = store.allSources.find(s => s.id === channels.srcId);
+            if (src) channels.loadXtreamCat(src, catId, channels.xtreamCats);
+          }}
           // channel list
           loading={channels.loading}
           loadErr={channels.loadErr}

@@ -6,12 +6,10 @@ import { DEFAULT_SOURCES } from '@/lib/constants';
 import { loadStored, saveStored } from '@/lib/storage';
 
 export function useStore() {
-  const [stored, setStored] = useState<StoredData>(() =>
-    typeof window !== 'undefined' ? loadStored() : {
-      favorites: [], hidden: [], hiddenSources: [],
-      customSources: [], credentials: {}, sourceUrlOverrides: {},
-    }
-  );
+  const [stored, setStored] = useState<StoredData>({
+    favorites: [], hidden: [], hiddenSources: [],
+    customSources: [], credentials: {}, sourceUrlOverrides: {},
+  });
 
   useEffect(() => { setStored(loadStored()); }, []);
 
@@ -45,24 +43,24 @@ export function useStore() {
     mutate(p => ({ ...p, hidden: [...p.hidden, id] }));
   }, [mutate]);
 
-  const addSource = useCallback((name: string, url: string, username: string, password: string) => {
+  const addSource = useCallback((name: string, url: string, username: string, password: string, icon = '📡') => {
     const id = 'custom-' + Date.now();
     mutate(p => ({
       ...p,
-      customSources: [...p.customSources, { id, name: name || 'مصدر جديد', url, icon: '📡', hasAuth: url.includes('{username}'), isDefault: false }],
+      customSources: [...p.customSources, { id, name: name || 'مصدر جديد', url, icon, hasAuth: url.includes('{username}'), isDefault: false }],
       credentials: { ...p.credentials, [id]: { username, password } },
     }));
     return id;
   }, [mutate]);
 
-  const saveSourceEdit = useCallback((id: string, name: string, url: string, username: string, password: string) => {
+  const saveSourceEdit = useCallback((id: string, name: string, url: string, username: string, password: string, icon?: string) => {
     const isDefault = DEFAULT_SOURCES.some(s => s.id === id);
     mutate(p => ({
       ...p,
       sourceUrlOverrides: { ...p.sourceUrlOverrides, [id]: url },
       credentials:        { ...p.credentials,        [id]: { username, password } },
       customSources: !isDefault
-        ? p.customSources.map(s => s.id === id ? { ...s, name } : s)
+        ? p.customSources.map(s => s.id === id ? { ...s, name, ...(icon ? { icon } : {}) } : s)
         : p.customSources,
     }));
   }, [mutate]);
