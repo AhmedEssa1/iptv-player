@@ -76,6 +76,10 @@ export default function Sidebar(p: Props) {
                 key={src.id}
                 className={`source-item${p.srcId === src.id ? ' source-item--active' : ''}`}
                 onClick={() => p.onSelectSource(src.id)}
+                role="button"
+                tabIndex={0}
+                aria-pressed={p.srcId === src.id}
+                onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); p.onSelectSource(src.id); } }}
               >
                 <span className="source-icon">{src.icon || '📡'}</span>
                 <span className="source-name">{src.name}</span>
@@ -109,6 +113,10 @@ export default function Sidebar(p: Props) {
                   key={cat.id}
                   className="source-item"
                   onClick={() => p.onSelectXtreamCat(cat.id)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={cat.name}
+                  onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); p.onSelectXtreamCat(cat.id); } }}
                   style={{ cursor: 'pointer' }}
                 >
                   <span className="source-icon">📺</span>
@@ -150,6 +158,7 @@ export default function Sidebar(p: Props) {
                 <input
                   className="search-input"
                   type="text"
+                  aria-label="بحث في القنوات"
                   value={p.search}
                   onChange={e => { p.onSearch(e.target.value); }}
                   placeholder="بحث في القنوات..."
@@ -158,6 +167,7 @@ export default function Sidebar(p: Props) {
                   <button
                     className={`filter-btn${p.onlyFavs ? ' filter-btn--active-fav' : ''}`}
                     onClick={p.onToggleFavs}
+                    aria-pressed={p.onlyFavs}
                     title={p.onlyFavs ? 'إظهار الكل' : 'المفضلة فقط'}
                     style={{ flex: 1 }}
                   >
@@ -171,6 +181,7 @@ export default function Sidebar(p: Props) {
                     className={`filter-btn filter-btn--check${p.checkingAll ? ' filter-btn--active' : ''}`}
                     onClick={p.onCheckAll}
                     disabled={p.checkingAll}
+                    aria-busy={p.checkingAll}
                     title={p.checkingAll ? 'جاري الفحص...' : 'فحص القنوات'}
                     style={{ flex: 1 }}
                   >
@@ -237,6 +248,7 @@ export default function Sidebar(p: Props) {
                 <input
                   className="search-input"
                   type="text"
+                  aria-label="بحث في القنوات"
                   value={p.search}
                   onChange={e => { p.onSearch(e.target.value); }}
                   placeholder="بحث في القنوات..."
@@ -244,6 +256,7 @@ export default function Sidebar(p: Props) {
                 <div className="filter-row">
                   <select
                     className="cat-select"
+                    aria-label="تصفية حسب الفئة"
                     value={p.category}
                     onChange={e => p.onCategory(e.target.value)}
                   >
@@ -254,6 +267,7 @@ export default function Sidebar(p: Props) {
                   <button
                     className={`filter-btn${p.onlyFavs ? ' filter-btn--active-fav' : ''}`}
                     onClick={p.onToggleFavs}
+                    aria-pressed={p.onlyFavs}
                     title={p.onlyFavs ? 'إظهار الكل' : 'المفضلة فقط'}
                   >
                     {p.onlyFavs
@@ -265,6 +279,7 @@ export default function Sidebar(p: Props) {
                     className={`filter-btn filter-btn--check${p.checkingAll ? ' filter-btn--active' : ''}`}
                     onClick={p.onCheckAll}
                     disabled={p.checkingAll}
+                    aria-busy={p.checkingAll}
                     title={p.checkingAll ? 'جاري الفحص...' : 'فحص جميع القنوات الظاهرة'}
                   >
                     {p.checkingAll

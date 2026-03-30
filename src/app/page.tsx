@@ -7,6 +7,7 @@ import { useStore }       from '@/hooks/useStore';
 import { useChannels }    from '@/hooks/useChannels';
 import { usePlayer }      from '@/hooks/usePlayer';
 import { useStatusCheck } from '@/hooks/useStatusCheck';
+import { useTheme }       from '@/hooks/useTheme';
 
 import AppHeader     from '@/components/AppHeader';
 import Sidebar       from '@/components/Sidebar';
@@ -20,6 +21,7 @@ export default function Home() {
   const [modal, setModal] = useState<null | 'add' | string>(null); // null | 'add' | sourceId
 
   /* ── Core hooks ── */
+  const { theme, toggle: toggleTheme } = useTheme();
   const store    = useStore();
   const channels = useChannels({ stored: store.stored, getSourceUrl: store.getSourceUrl });
   const player   = usePlayer();
@@ -74,6 +76,8 @@ export default function Home() {
           if (src) channels.loadSource(src);
         }}
         onAddSource={openAddModal}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>

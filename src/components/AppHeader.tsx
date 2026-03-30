@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import type { Theme } from '@/hooks/useTheme';
 
 const APP_VERSION = '1.0';
 const SITE_URL    = 'https://mysoftware-solution.blogspot.com/';
@@ -14,6 +15,8 @@ interface Props {
   hasActiveSource: boolean;
   onReload: () => void;
   onAddSource: () => void;
+  theme: Theme;
+  onToggleTheme: () => void;
 }
 
 export default function AppHeader({
@@ -21,6 +24,7 @@ export default function AppHeader({
   channelCount, filteredCount,
   loading, hasActiveSource,
   onReload, onAddSource,
+  theme, onToggleTheme,
 }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -49,15 +53,9 @@ export default function AppHeader({
 
       <div className="header-logo">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <rect x="2" y="7" width="20" height="13" rx="2" fill="none" stroke="url(#lg)" strokeWidth="1.8"/>
-          <path d="M8 7V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" stroke="url(#lg)" strokeWidth="1.8"/>
-          <circle cx="12" cy="13.5" r="2.5" fill="url(#lg)"/>
-          <defs>
-            <linearGradient id="lg" x1="2" y1="4" x2="22" y2="20" gradientUnits="userSpaceOnUse">
-              <stop stopColor="#60a5fa"/>
-              <stop offset="1" stopColor="#a78bfa"/>
-            </linearGradient>
-          </defs>
+          <rect x="2" y="7" width="20" height="13" rx="2" fill="none" stroke="var(--accent)" strokeWidth="1.8"/>
+          <path d="M8 7V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" stroke="var(--accent)" strokeWidth="1.8"/>
+          <circle cx="12" cy="13.5" r="2.5" fill="var(--accent)"/>
         </svg>
         <span className="header-title">IPTV Player</span>
       </div>
@@ -96,6 +94,34 @@ export default function AppHeader({
         </svg>
       </button>
 
+      {/* ── Theme toggle ── */}
+      <button
+        className="icon-btn"
+        onClick={onToggleTheme}
+        title={theme === 'dark' ? 'الوضع النهاري' : 'الوضع الليلي'}
+        aria-label="Toggle theme"
+      >
+        {theme === 'dark' ? (
+          /* Sun icon */
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1"  x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22"  x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1"  y1="12" x2="3"  y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        ) : (
+          /* Moon icon */
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        )}
+      </button>
+
       {/* ── Menu ── */}
       <div ref={menuRef} style={{ position: 'relative' }}>
         <button
@@ -117,15 +143,9 @@ export default function AppHeader({
             <div className="header-menu-info">
               <div className="header-menu-logo">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                  <rect x="2" y="7" width="20" height="13" rx="2.5" stroke="url(#mlg)" strokeWidth="1.6"/>
-                  <path d="M8 7V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" stroke="url(#mlg)" strokeWidth="1.6"/>
-                  <circle cx="12" cy="13.5" r="2.5" fill="url(#mlg)"/>
-                  <defs>
-                    <linearGradient id="mlg" x1="2" y1="4" x2="22" y2="20" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#60a5fa"/>
-                      <stop offset="1" stopColor="#a78bfa"/>
-                    </linearGradient>
-                  </defs>
+                  <rect x="2" y="7" width="20" height="13" rx="2.5" stroke="var(--accent)" strokeWidth="1.6"/>
+                  <path d="M8 7V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" stroke="var(--accent)" strokeWidth="1.6"/>
+                  <circle cx="12" cy="13.5" r="2.5" fill="var(--accent)"/>
                 </svg>
                 <div>
                   <span className="header-menu-appname">IPTV Player</span>

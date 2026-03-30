@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { M3USource } from '@/types/iptv';
 import { DEFAULT_SOURCES } from '@/lib/constants';
 
@@ -42,6 +42,27 @@ export default function SourceModal({ mode, source, storedUrl, storedCredentials
   const [isXtream, setIsXtream] = useState(false);
   const [host,     setHost]     = useState('');
   const [icon,     setIcon]     = useState('📡');
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Focus trap
+  useEffect(() => {
+    if (!mode) return;
+    const card = cardRef.current;
+    if (!card) return;
+    const sel = 'button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    const focusable = () => Array.from(card.querySelectorAll<HTMLElement>(sel));
+    focusable()[0]?.focus();
+    function trap(e: KeyboardEvent) {
+      if (e.key === 'Escape') { onClose(); return; }
+      if (e.key !== 'Tab') return;
+      const els = focusable();
+      const first = els[0]; const last = els[els.length - 1];
+      if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last?.focus(); } }
+      else            { if (document.activeElement === last)  { e.preventDefault(); first?.focus(); } }
+    }
+    document.addEventListener('keydown', trap);
+    return () => document.removeEventListener('keydown', trap);
+  }, [mode, onClose]);
 
   useEffect(() => {
     if (mode === 'add') {
@@ -69,9 +90,9 @@ export default function SourceModal({ mode, source, storedUrl, storedCredentials
 
   return (
     <div className="modal-backdrop" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="modal-card">
+      <div className="modal-card" ref={cardRef} role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div className="modal-header">
-          <h2 className="modal-title">
+          <h2 className="modal-title" id="modal-title">
             {mode === 'add' ? 'إضافة مصدر جديد' : 'تعديل المصدر'}
           </h2>
           <button className="icon-btn" onClick={onClose} aria-label="Close">
@@ -99,7 +120,7 @@ export default function SourceModal({ mode, source, storedUrl, storedCredentials
               <div style={{
                 width: '40px', height: '40px', border: '1px solid var(--border)',
                 borderRadius: '6px', display: 'flex', alignItems: 'center',
-                justifyContent: 'center', fontSize: '20px', background: 'var(--bg-2)',
+                justifyContent: 'center', fontSize: '20px', background: 'var(--surface-2)',
                 cursor: 'default', flexShrink: 0,
               }}>{icon}</div>
             </div>
@@ -110,7 +131,7 @@ export default function SourceModal({ mode, source, storedUrl, storedCredentials
             <div style={{
               display: 'flex', flexWrap: 'wrap', gap: '4px',
               maxHeight: '100px', overflowY: 'auto',
-              padding: '6px', background: 'var(--bg-2)',
+              padding: '6px', background: 'var(--surface-2)',
               border: '1px solid var(--border)', borderRadius: '6px',
             }}>
               {ICON_LIST.map(ic => (

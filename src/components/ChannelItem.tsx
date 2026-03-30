@@ -19,11 +19,16 @@ export default function ChannelItem({ channel: ch, isPlaying, isFav, status, onP
     <div
       className={`channel-item${isPlaying ? ' channel-item--active' : ''}`}
       onClick={() => onPlay(ch)}
+      role="button"
+      tabIndex={0}
+      aria-label={`تشغيل ${ch.name}`}
+      aria-pressed={isPlaying}
+      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onPlay(ch); } }}
     >
       {/* Logo */}
       <div className="ch-logo">
         {ch.logo
-          ? <img src={ch.logo} alt="" onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          ? <img src={ch.logo} alt="" loading="lazy" decoding="async" onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
           : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M8 7V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/></svg>
         }
       </div>
@@ -40,6 +45,8 @@ export default function ChannelItem({ channel: ch, isPlaying, isFav, status, onP
           className={`status-dot${status === 'checking' ? ' status-dot--pulse' : ''}`}
           style={{ background: statusColor(status) }}
           title={statusLabel(status)}
+          aria-label={statusLabel(status)}
+          role="img"
         />
       )}
 
